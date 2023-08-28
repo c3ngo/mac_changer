@@ -31,8 +31,8 @@ python3 mac_changer.py -i eth0 -m 00:11:22:33:44:55
 
 
 ## Important Notes
-The script requires administrative privileges to make changes. Run it with sudo or as the root user.
+- The script requires administrative privileges to make changes. Run it with sudo or as the root user.
 
-Changing the MAC address of a network interface can have legal and security implications. Make sure you have proper authorization to modify MAC addresses on your system.
+- Changing the MAC address of a network interface can have legal and security implications. Make sure you have proper authorization to modify MAC addresses on your system.
 
-This script is intended for educational and testing purposes. Use it responsibly and in compliance with your local laws and regulations.
+- This script is intended for educational and testing purposes. Use it responsibly and in compliance with your local laws and regulations.
