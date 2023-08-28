@@ -14,7 +14,7 @@ It utilizes the subprocess and re modules in Python for interacting with the sys
 
 
 ```sh
-python mac_changer.py -i [interface] -m [new_mac_address]
+python3 mac_changer.py -i [interface] -m [new_mac_address]
 ```
 
 
@@ -26,7 +26,7 @@ To change the MAC address of the interface eth0 to 00:11:22:33:44:55, you would 
 
 
 ```sh
-python mac_changer.py -i eth0 -m 00:11:22:33:44:55
+python3 mac_changer.py -i eth0 -m 00:11:22:33:44:55
 ```
 
 
