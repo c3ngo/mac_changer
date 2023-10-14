@@ -2,50 +2,36 @@ import subprocess
 import optparse
 import re
 
-ascii_art = """
-     __  ___              ________                               
-    /  |/  /___ ______   / ____/ /_  ____ _____  ____ ____  _____
-   / /|_/ / __ `/ ___/  / /   / __ \/ __ `/ __ \/ __ `/ _ \/ ___/
-  / /  / / /_/ / /__   / /___/ / / / /_/ / / / / /_/ /  __/ /    
- /_/  /_/\__,_/\___/   \____/_/ /_/\__,_/_/ /_/\__, /\___/_/     
-                                              /____/
-"""
-
 
 def get_user_input():
-    parse_object = optparse.OptionParser()
-    parse_object.add_option("-i", "--interface", dest="interface", help=" Interface to be changed")
-    parse_object.add_option("-m", "--mac", dest="mac_address", help="New mac address")
+    parser = optparse.OptionParser()
+    parser.add_option("-i", "--interface", dest="interface", help="interface to be changed")
+    parser.add_option("-m", "--mac", dest="mac_address", help="new MAC address")
+    return parser.parse_args()
 
-    return parse_object.parse_args()
 
-
-def change_mac_address(user_interface, user_mac_address):
-    subprocess.call(["ifconfig", user_interface, "down"])
-    subprocess.call(["ifconfig", user_interface, "hw", "ether", user_mac_address])
-    subprocess.call(["ifconfig", user_interface, "up"])
+def change_mac_address(interface, mac_address):
+    subprocess.call(["ifconfig", interface, "down"])
+    subprocess.call(["ifconfig", interface, "hw", "ether", mac_address])
+    subprocess.call(["ifconfig", interface, "up"])
 
 
 def control_new_mac(interface):
+    ifconfig_output = subprocess.check_output(["ifconfig", interface]).decode("utf-8")
+    mac_address_match = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig_output)
 
-    ifconfig = subprocess.check_output(["ifconfig", interface]).decode("utf-8")
-    new_mac = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig)
-
-    if new_mac:
-        return new_mac.group(0)
+    if mac_address_match:
+        return mac_address_match.group(0)
     else:
         return None
 
 
-print(ascii_art)
+if __name__ == "__main__":
+    user_input, _ = get_user_input()
+    change_mac_address(user_input.interface, user_input.mac_address)
+    finalized_mac = control_new_mac(user_input.interface)
 
-
-(user_input, arguments) = get_user_input()
-change_mac_address(user_input.interface, user_input.mac_address)
-finalized_mac = control_new_mac(user_input.interface)
-
-
-if finalized_mac == user_input.mac_address:
-    print("Success! " + "Your " + user_input.interface + "'s MAC address " + user_input.mac_address)
-else:
-    print("Error!")
+    if finalized_mac == user_input.mac_address:
+        print(f"Success! Your {user_input.interface}'s MAC address is now {user_input.mac_address}")
+    else:
+        print("Error!")
